@@ -14,16 +14,16 @@ class ShowcaseViewController: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(styleChanged(_:)), name: Notification.StyleChange.rawValue, object: nil)
+        NotificationCenter.default().addObserver(self, selector: #selector(styleChanged(notification:)), name: Notification.Name.StyleChanged, object: nil)
 
     }
 
-    func styleChanged(notification: NSNotification) {
+    func styleChanged(notification: Notification) {
 
         if let userInfo = notification.userInfo, let style = userInfo["style"] as? Style, let subviews = view.subviews.first?.subviews {
             for subview in subviews {
                 if let icon = subview as? AnimatedIcon {
-                    icon.applyStyle(style)
+                    icon.apply(style: style)
                 }
             }
         }

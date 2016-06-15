@@ -11,7 +11,7 @@ import MKJIcons
 
 extension AnimatedIcon {
 
-    func applyStyle(style: Style) {
+    func apply(style: Style) {
         lineWidth = style.lineWidth
         lineCapStyle = style.lineCap
         lineJoinStyle = style.lineJoin

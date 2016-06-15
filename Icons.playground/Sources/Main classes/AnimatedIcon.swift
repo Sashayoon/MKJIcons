@@ -23,7 +23,7 @@ public class AnimatedIcon: UIControl {
         didSet {
 
             if animationRepeat {
-                animateTo(CGFloat(!Bool(value)))
+                animate(to: CGFloat(!Bool(value)))
             }
 
             layer.setNeedsDisplay()
@@ -34,7 +34,7 @@ public class AnimatedIcon: UIControl {
         didSet {
 
             if animationRepeat {
-                animateTo(CGFloat(!Bool(value)))
+                animate(to: CGFloat(!Bool(value)))
             }
 
             layer.setNeedsDisplay()
@@ -50,12 +50,12 @@ public class AnimatedIcon: UIControl {
             layer.setNeedsDisplay()
         }
     }
-    public var lineCap: CGLineCap = .Round {
+    public var lineCap: CGLineCap = .round {
         didSet {
             layer.setNeedsDisplay()
         }
     }
-    public var lineJoin: CGLineJoin = .Round {
+    public var lineJoin: CGLineJoin = .round {
         didSet {
             layer.setNeedsDisplay()
         }
@@ -67,11 +67,11 @@ public class AnimatedIcon: UIControl {
         didSet {
 
             if oldValue != value {
-                animateTo(value)
+                animate(to: value)
             }
 
-            if enabled {
-                self.sendActionsForControlEvents(.ValueChanged)
+            if isEnabled {
+                self.sendActions(for: .valueChanged)
             }
 
             layer.setNeedsDisplay()
@@ -92,7 +92,7 @@ public class AnimatedIcon: UIControl {
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.clearColor()
+        backgroundColor = UIColor.clear()
 
         setContentsScale()
     }
@@ -108,7 +108,7 @@ public class AnimatedIcon: UIControl {
     func setContentsScale() {
         layer.setNeedsDisplay()
 
-        let scale = UIScreen.mainScreen().scale
+        let scale = UIScreen.main().scale
         layer.contentsScale = scale
         contentScaleFactor = scale
     }
@@ -119,20 +119,24 @@ public class AnimatedIcon: UIControl {
         return AnimationLayer.self
     }
 
-    override public func drawLayer(layer: CALayer, inContext ctx: CGContext) {
+    override public func draw(_ layer: CALayer, in ctx: CGContext) {
         UIGraphicsPushContext(ctx)
-        if let layer = layer as? AnimationLayer {
-            draw(layer.value)
+        if let layer = layer as? AnimationLayer, context = UIGraphicsGetCurrentContext() {
+            draw(in: context, at: layer.value)
         }
         UIGraphicsPopContext()
     }
 
-    public func image(at: CGFloat = 0) -> UIImage {
+    public func image(at time: CGFloat = 0) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(frame.size, false, contentScaleFactor)
-        draw(at)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image
+        if let context = UIGraphicsGetCurrentContext(), image = UIGraphicsGetImageFromCurrentImageContext() {
+            draw(in: context, at: time)
+            UIGraphicsEndImageContext()
+            return image
+        } else {
+            UIGraphicsEndImageContext()
+            fatalError("Failed to initialize image context")
+        }
     }
 
     /**
@@ -140,11 +144,11 @@ public class AnimatedIcon: UIControl {
 
         - Parameter time: The position of animation, start of the animation will be 0 and the end will be 1. If the animation is reverted the value will be changing from 1 to 0.
     */
-    func draw(time: CGFloat = 0) {
+    func draw(in context: CGContext, at time: CGFloat) {
         fatalError("Method must be overriden in subclasses. Do not instantiate this class directly.")
     }
 
-    public func animateTo(goal: CGFloat) {
+    public func animate(to goal: CGFloat) {
 
         if let layer = layer as? AnimationLayer {
 
@@ -170,7 +174,7 @@ public class AnimatedIcon: UIControl {
                     animation.autoreverses = animationAutoreverses
                 }
 
-                layer.addAnimation(animation, forKey: nil)
+                layer.add(animation, forKey: nil)
 
                 CATransaction.begin()
                 CATransaction.setDisableActions(true)
@@ -183,8 +187,8 @@ public class AnimatedIcon: UIControl {
 
     // MARK: - Interaction
 
-    public override func endTrackingWithTouch(touch: UITouch?, withEvent event: UIEvent?) {
-        if enabled {
+    public override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
+        if isEnabled {
             value = (value == 0 ? 1 : 0)
         }
     }

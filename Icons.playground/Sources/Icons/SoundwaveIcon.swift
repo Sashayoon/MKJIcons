@@ -61,20 +61,19 @@ public class SoundwaveIcon: AnimatedIcon {
 
     // MARK: - Drawing methods
 
-    override func draw(time: CGFloat = 0) {
+    override func draw(in context: CGContext, at time: CGFloat) {
 
         // General Declarations
-        let context = UIGraphicsGetCurrentContext()
 
-        CGContextClearRect(context, CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
-        CGContextScaleCTM(context, scale, scale)
+        context.clear(CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
+        context.scale(x: scale, y: scale)
 
         strokeColor.setStroke()
 
         // Draw lines
 
         let spaces: CGFloat = CGFloat(lineCount) - 1
-        let pi = CGFloat(M_PI)
+        let pi = CGFloat.pi
         let baseLength = (size / 2 - sinLineLength) * 2.0
         let offset = (100 - size) / 2
 
@@ -86,16 +85,16 @@ public class SoundwaveIcon: AnimatedIcon {
             let length: CGFloat = baseLength + (1 + sin((time + iterator / spaces) * multiplier * pi)) * sinLineLength
 
             // Bezier Drawing
-            CGContextSaveGState(context)
-            CGContextTranslateCTM(context, x, y)
+            context.saveGState()
+            context.translate(x: x, y: y)
 
             let bezierPath = UIBezierPath(style: self)
-            bezierPath.moveToPoint(CGPoint.zero)
-            bezierPath.addLineToPoint(CGPoint(x: 0, y: length))
+            bezierPath.move(to: CGPoint.zero)
+            bezierPath.addLine(to: CGPoint(x: 0, y: length))
 
             bezierPath.stroke()
 
-            CGContextRestoreGState(context)
+            context.restoreGState()
         }
 
     }

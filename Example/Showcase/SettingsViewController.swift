@@ -13,44 +13,45 @@ class SettingsViewController: ViewController {
     let style = Style()
 
     func update() {
-        NSNotificationCenter.defaultCenter().postNotificationName(Notification.StyleChange.rawValue, object: self, userInfo: ["style": style])
+        NotificationCenter.default().post(name: Notification.Name.StyleChanged, object: self, userInfo: [
+            "style": style,
+        ])
     }
-
 
     // MARK: - Interface actions
 
-    @IBAction func lineWidthChanged(sender: UISlider) {
+    @IBAction func lineWidthChanged(_ sender: UISlider) {
         style.lineWidth = CGFloat(sender.value)
         update()
     }
 
-    @IBAction func lineCapChanged(sender: UISegmentedControl) {
+    @IBAction func lineCapChanged(_ sender: UISegmentedControl) {
         style.lineCap = sender.selectedSegmentIndex
         update()
     }
 
-    @IBAction func lineJoinChanged(sender: UISegmentedControl) {
+    @IBAction func lineJoinChanged(_ sender: UISegmentedControl) {
         style.lineJoin = sender.selectedSegmentIndex
         update()
     }
 
-    @IBAction func animationDurationChanged(sender: UISlider) {
+    @IBAction func animationDurationChanged(_ sender: UISlider) {
         style.animationDuration = Double(sender.value)
         update()
     }
 
-    @IBAction func colorModeChanged(sender: UISegmentedControl) {
+    @IBAction func colorModeChanged(_ sender: UISegmentedControl) {
         style.animationColorMode = sender.selectedSegmentIndex
         update()
     }
 
-    @IBAction func animationTimingFunctionChanged(sender: UISegmentedControl) {
+    @IBAction func animationTimingFunctionChanged(_ sender: UISegmentedControl) {
         style.animationTimingFunction = sender.selectedSegmentIndex + 1
         update()
     }
 
-    @IBAction func animationRepeatChanged(sender: UISwitch) {
-        style.animationRepeat = sender.on
+    @IBAction func animationRepeatChanged(_ sender: UISwitch) {
+        style.animationRepeat = sender.isOn
         update()
     }
 

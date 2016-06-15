@@ -13,7 +13,7 @@ public class BurgerIcon: AnimatedIcon {
 
     // MARK: - Inspectable properties
 
-    @IBInspectable public var burgerColor: UIColor = UIColor.whiteColor() {
+    @IBInspectable public var burgerColor: UIColor = UIColor.white() {
         didSet {
             layer.setNeedsDisplay()
         }
@@ -35,14 +35,12 @@ public class BurgerIcon: AnimatedIcon {
 
     // MARK: - Drawing methods
 
-    override func draw(time: CGFloat = 0) {
+    override func draw(in context: CGContext, at time: CGFloat) {
 
         let offset: CGFloat = 5
 
         // General Declarations
-        let context = UIGraphicsGetCurrentContext()
-
-        CGContextClearRect(context, CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
+        context.clear(CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
 
         let currentColor = UIColor(between: burgerColor, and: crossColor, using: colorMode, ratio: time)
 
@@ -55,54 +53,54 @@ public class BurgerIcon: AnimatedIcon {
         let negativeTimedOffset: CGFloat = -timedOffset
         let timeLineWidth: CGFloat = scaledLineWidth / localScale
 
-        CGContextScaleCTM(context, scale, scale)
+        context.scale(x: scale, y: scale)
 
         // Bottom Drawing
-        CGContextSaveGState(context)
-        CGContextTranslateCTM(context, 30, (timedOffset + 65))
-        CGContextRotateCTM(context, -angle * CGFloat(M_PI) / 180)
-        CGContextScaleCTM(context, localScale, localScale)
+        context.saveGState()
+        context.translate(x: 30, y: (timedOffset + 65))
+        context.rotate(byAngle: -angle * CGFloat.pi / 180)
+        context.scale(x: localScale, y: localScale)
 
         let bottomPath = UIBezierPath(style: self)
-        bottomPath.moveToPoint(CGPoint(x: 40, y: 0))
-        bottomPath.addLineToPoint(CGPoint(x: 0, y: 0))
+        bottomPath.move(to: CGPoint(x: 40, y: 0))
+        bottomPath.addLine(to: CGPoint(x: 0, y: 0))
 
         currentColor.setStroke()
         bottomPath.lineWidth = timeLineWidth
         bottomPath.stroke()
 
-        CGContextRestoreGState(context)
+        context.restoreGState()
 
 
         // Middle Drawing
-        CGContextSaveGState(context)
-        CGContextTranslateCTM(context, 50, 50)
+        context.saveGState()
+        context.translate(x: 50, y: 50)
 
         let middlePath = UIBezierPath(style: self)
-        middlePath.moveToPoint(CGPoint(x: 20, y: 0))
-        middlePath.addLineToPoint(CGPoint(x: -20, y: 0))
+        middlePath.move(to: CGPoint(x: 20, y: 0))
+        middlePath.addLine(to: CGPoint(x: -20, y: 0))
 
         opacity.setStroke()
         middlePath.stroke()
 
-        CGContextRestoreGState(context)
+        context.restoreGState()
 
 
         // Top Drawing
-        CGContextSaveGState(context)
-        CGContextTranslateCTM(context, 30, (negativeTimedOffset + 35))
-        CGContextRotateCTM(context, -negativeAngle * CGFloat(M_PI) / 180)
-        CGContextScaleCTM(context, localScale, localScale)
+        context.saveGState()
+        context.translate(x: 30, y: (negativeTimedOffset + 35))
+        context.rotate(byAngle: -negativeAngle * CGFloat(M_PI) / 180)
+        context.scale(x: localScale, y: localScale)
 
         let topPath = UIBezierPath(style: self)
-        topPath.moveToPoint(CGPoint(x: 40, y: 0))
-        topPath.addLineToPoint(CGPoint(x: 0, y: 0))
+        topPath.move(to: CGPoint(x: 40, y: 0))
+        topPath.addLine(to: CGPoint(x: 0, y: 0))
 
         currentColor.setStroke()
         topPath.lineWidth = timeLineWidth
         topPath.stroke()
 
-        CGContextRestoreGState(context)
+        context.restoreGState()
     }
 
 }

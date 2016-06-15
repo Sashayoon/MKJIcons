@@ -42,14 +42,12 @@ public class PlusMinusIcon: AnimatedIcon {
 
     // MARK: - Drawing methods
 
-    override func draw(time: CGFloat = 0) {
+    override func draw(in context: CGContext, at time: CGFloat) {
 
         // General Declarations
-        let context = UIGraphicsGetCurrentContext()
-
         let strokeColor = UIColor(between: plusColor, and: minusColor, using: colorMode, ratio: time)
         strokeColor.setStroke()
-        let fillColor = strokeColor.colorWithAlphaComponent(fillAlpha)
+        let fillColor = strokeColor.withAlphaComponent(fillAlpha)
         fillColor.setFill()
 
         // Variable Declarations
@@ -59,13 +57,13 @@ public class PlusMinusIcon: AnimatedIcon {
         let pointPosition: CGFloat = lineLength / 2.0
         let negativePointPosition: CGFloat = -pointPosition
 
-        CGContextScaleCTM(context, scale, scale)
-        CGContextTranslateCTM(context, 50, 50)
+        context.scale(x: scale, y: scale)
+        context.translate(x: 50, y: 50)
 
         // Circle Drawing
         if circle {
 
-            let circlePath = UIBezierPath(ovalInRect: CGRect(x: -20, y: -20, width: 40, height: 40))
+            let circlePath = UIBezierPath(ovalIn: CGRect(x: -20, y: -20, width: 40, height: 40))
             circlePath.lineWidth = scaledLineWidth
             circlePath.fill()
             circlePath.stroke()
@@ -73,29 +71,29 @@ public class PlusMinusIcon: AnimatedIcon {
         }
 
         // Vertical line Drawing
-        CGContextSaveGState(context)
-        CGContextRotateCTM(context, -horizontalAngle * CGFloat(M_PI) / 180)
+        context.saveGState()
+        context.rotate(byAngle: -horizontalAngle * CGFloat(M_PI) / 180)
 
         let verticalLinePath = UIBezierPath(style: self)
-        verticalLinePath.moveToPoint(CGPoint(x: pointPosition, y: 0))
-        verticalLinePath.addLineToPoint(CGPoint(x: negativePointPosition, y: 0))
+        verticalLinePath.move(to: CGPoint(x: pointPosition, y: 0))
+        verticalLinePath.addLine(to: CGPoint(x: negativePointPosition, y: 0))
 
         verticalLinePath.stroke()
 
-        CGContextRestoreGState(context)
+        context.restoreGState()
 
 
         // Horizontal line Drawing
-        CGContextSaveGState(context)
-        CGContextRotateCTM(context, -verticalAngle * CGFloat(M_PI) / 180)
+        context.saveGState()
+        context.rotate(byAngle: -verticalAngle * CGFloat.pi / 180)
 
         let horizontalLinePath = UIBezierPath(style: self)
-        horizontalLinePath.moveToPoint(CGPoint(x: pointPosition, y: 0))
-        horizontalLinePath.addLineToPoint(CGPoint(x: negativePointPosition, y: 0))
+        horizontalLinePath.move(to: CGPoint(x: pointPosition, y: 0))
+        horizontalLinePath.addLine(to: CGPoint(x: negativePointPosition, y: 0))
 
         horizontalLinePath.stroke()
 
-        CGContextRestoreGState(context)
+        context.restoreGState()
 
     }
 

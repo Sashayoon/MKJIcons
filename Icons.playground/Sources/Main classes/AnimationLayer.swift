@@ -28,23 +28,23 @@ class AnimationLayer: CALayer {
 
     // MARK: - Animation of the value
 
-    override class func needsDisplayForKey(key: (String!)) -> Bool {
+    override class func needsDisplay(forKey key: (String!)) -> Bool {
 
         if key == "value" {
             return true
         }
 
-        return super.needsDisplayForKey(key)
+        return super.needsDisplay(forKey: key)
     }
 
-    override func actionForKey(event: (String!)) -> (CAAction!) {
+    override func action(forKey event: (String!)) -> (CAAction!) {
         if event == "value" {
             let animation = CABasicAnimation.init(keyPath: event)
-            animation.fromValue = presentationLayer()?.valueForKey(event)
+            animation.fromValue = presentation()?.value(forKey: event)
             return animation
         }
 
-        return super.actionForKey(event)
+        return super.action(forKey: event)
     }
 
 }

@@ -32,15 +32,15 @@ public extension UIColor {
 
     // MARK: - Creating from RGB components
 
-    func colorWithRedComponent(red: CGFloat) -> UIColor {
+    func colorWithRed(red: CGFloat) -> UIColor {
         return UIColor(red: red, green: green, blue: blue, alpha: alpha)
     }
 
-    func colorWithGreenComponent(green: CGFloat) -> UIColor {
+    func colorWithGreen(green: CGFloat) -> UIColor {
         return UIColor(red: red, green: green, blue: blue, alpha: alpha)
     }
 
-    func colorWithBlueComponent(blue: CGFloat) -> UIColor {
+    func colorWithBlue(blue: CGFloat) -> UIColor {
         return UIColor(red: red, green: green, blue: blue, alpha: alpha)
     }
 

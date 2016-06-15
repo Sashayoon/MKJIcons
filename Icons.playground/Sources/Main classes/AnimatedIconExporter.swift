@@ -12,11 +12,11 @@ public class AnimatedIconExporter {
     var direction: AnimatedIconExporterDirection
     var count: Int
     var frames: [UIImage]
-    var folder: NSURL
+    var folder: URL
 
     // MARK: - Initialization
 
-    public init(icon: AnimatedIcon, folder: NSURL, direction: AnimatedIconExporterDirection = .Forward, count: Int = 50) {
+    public init(icon: AnimatedIcon, folder: URL, direction: AnimatedIconExporterDirection = .Forward, count: Int = 50) {
         self.icon = icon
         self.direction = direction
         self.count = count
@@ -29,62 +29,59 @@ public class AnimatedIconExporter {
     public func export() -> [UIImage] {
         frames = []
         for i in 0...count {
-            frames.append(icon.image(position(i)))
+            if let image = icon.image(at: position(at: i)) {
+                frames.append(image)
+            }
         }
         return frames
     }
 
-    public func save() -> Bool {
+    public func save() {
 
-        var exported = true
+        let name = NSStringFromClass(icon.dynamicType).components(separatedBy: ".").last
 
-        let name = NSStringFromClass(icon.dynamicType).componentsSeparatedByString(".").last
-
-        if !NSFileManager.defaultManager().fileExistsAtPath(folder.path!) {
-            try! NSFileManager.defaultManager().createDirectoryAtURL(folder, withIntermediateDirectories: true, attributes: nil)
+        if !FileManager.default().fileExists(atPath: folder.path!) {
+            try! FileManager.default().createDirectory(at: folder, withIntermediateDirectories: true, attributes: nil)
         }
 
-        let formatter = NSDateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "YYYY-MM-dd_HH-mm-ss"
-        let date = formatter.stringFromDate(NSDate())
+        let date = formatter.string(from: Date())
 
         let images = export()
         for i in 0...(images.count - 1) {
 
             let fileName = String(format: "%@_%@_%03d.png", arguments: [date, name!, i])
-            let filePath = folder.URLByAppendingPathComponent(fileName)
+            let filePath = try! folder.appendingPathComponent(fileName)
             let data = UIImagePNGRepresentation(images[i])
 
-            if let data = data {
-                exported = exported && data.writeToURL(filePath, atomically: true)
-            }
+            try! data?.write(to: filePath)
 
         }
-        return exported
     }
 
     // MARK: - Helper functions
 
-    func position(i: Int) -> CGFloat {
-        var value = CGFloat(i) / CGFloat(count)
+    func position(at index: Int) -> CGFloat {
+        var value = CGFloat(index) / CGFloat(count)
 
         // Calculate position of animation on timeline
         if direction == .Backward {
             value = 1 - value
         } else if direction == .ForwardAndBack {
-            value = (value % 0.5) * 2 * (value % 1 >= 0.5 ? -1 : 1) + (value % 1 >= 0.5 ? 1 : 0)
+            value = value.truncatingRemainder(dividingBy: 0.5) * 2 * (value.truncatingRemainder(dividingBy: 1) >= 0.5 ? -1 : 1) + (value.truncatingRemainder(dividingBy: 1) >= 0.5 ? 1 : 0)
         }
 
         // Apply animation function
         switch icon.timingFunction {
         case kCAMediaTimingFunctionEaseInEaseOut:
-            value = AnimationFunctions.sinEaseInOut(value)
+            value = AnimationFunctions.sinEaseInOut(x: value)
         case kCAMediaTimingFunctionEaseIn:
-            value = AnimationFunctions.sinEaseOut(value)
+            value = AnimationFunctions.sinEaseOut(x: value)
         case kCAMediaTimingFunctionEaseOut:
-            value = AnimationFunctions.sinEaseIn(value)
+            value = AnimationFunctions.sinEaseIn(x: value)
         default:
-            value = AnimationFunctions.linear(value)
+            value = AnimationFunctions.linear(x: value)
         }
 
         return value
