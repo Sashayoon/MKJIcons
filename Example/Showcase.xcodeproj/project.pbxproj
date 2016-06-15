@@ -154,11 +154,14 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Matěj Kašpar Jirásek";
 				TargetAttributes = {
 					E7BE8DF01CC57FF2007DADED = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = QLPB86L68N;
+						DevelopmentTeamName = "Matěj Jirásek (Personal Team)";
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -324,8 +327,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Showcase/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = is.mkj.Showcase;
+				PRODUCT_BUNDLE_IDENTIFIER = is.mkj.MKJIcons.Showcase;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -335,8 +339,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Showcase/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = is.mkj.Showcase;
+				PRODUCT_BUNDLE_IDENTIFIER = is.mkj.MKJIcons.Showcase;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
